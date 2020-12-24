@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vue Tic Tac Toe</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 100px 100px 100px;
+            grid-template-rows: 100px 100px 100px;
+        }
+        
+        button {
+            font-size: 80px;
+            background: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h3>Its your Turn {{turn}}</h3>
+        <div class="container">
+            <button v-for="x in board" @click="clickBox(x)" >{{x}}</button>
+        </div>
+
+    </div>
+
+    <script>
+        const TicTacToe = {
+            data() {
+                return {
+                    turn: "X",
+                    board: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                    count:0,
+                    win_lines: [[0, 1, 2],[3, 4, 5],[6, 7, 8],[0, 3, 6],[1, 4, 7],[2, 5, 8],[0, 4, 8],[2, 4, 6]]
+                };
+            },
+            methods: {
+                checkWinner() {
+                    for (let index = 0; index < this.win_lines.length; index++) {
+                        const [a, b, c] = this.win_lines[index]
+                        if (this.board[a] === this.board[b] && this.board[b] === this.board[c]) {
+                            return true
+                        }
+                    }
+                    return false
+                },
+                clickBox(x) {
+                    if (x!= "X" && x != "O" ) {
+                        this.board[x - 1] = this.turn;
+                        this.count++;
+                        if (this.checkWinner()) {
+                            setTimeout(() => {
+                                alert(`The winner is ${this.board[x - 1]}`);
+                                this.board = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                                this.count=0
+                            }, 100)
+                        }
+                        if (this.turn == "X") {
+                            this.turn = "O";
+                        } else {
+                            this.turn = "X";
+                        }
+                    } else {
+                        alert("Already selected, choose another box ");
+                      }
+                      if(this.count == 9){
+                        alert("Game ended, No winner");
+                        this.board = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                        this.count=0
+                    }
+                },
+            },
+        };
+
+        Vue.createApp(TicTacToe).mount("#app");
+    </script>
+    </div>
+
+</body>
+
+</html>
